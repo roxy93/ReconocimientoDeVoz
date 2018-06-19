@@ -1,5 +1,7 @@
 package com.softlab_roxana.speechtotext;
 
+import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.Manifest;
@@ -21,8 +23,18 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Locale;
+
+import static com.softlab_roxana.speechtotext.Function.writeToSDFile;
 
 public class MainActivity extends AppCompatActivity implements RecognitionListener{
 
@@ -33,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private Intent recognizerIntent;
     static final int REQUEST_PERMISSION_KEY = 1;
     private Boolean startPause = true;
+    ContextCompat context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,16 +83,18 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             public void onClick(View p1) {
                 //progressBar.setVisibility(View.VISIBLE);
-                if (startPause) {speech.startListening(recognizerIntent);
+                if (startPause == true) {
+                    speech.startListening(recognizerIntent);
                     startPause = false;
-                    //recordbtn.setEnabled(false);
+                    recordbtn.setImageResource(R.drawable.ic_microphone_3);
+                    Log.d("Log", "START: " + startPause);
                 }
                 else{
+                    recordbtn.setImageResource(R.drawable.ic_microphone_2);
                     startPause = true;
-                    //onReadyForSpeech(Bundle arg0);
+                    Log.d("Log", "STOP: " + startPause);
                     speech.stopListening();
                     speech.cancel();
-
                 }
             }
         });
@@ -94,41 +109,43 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         super.onPause();
         if (speech != null) {
             speech.destroy();
-            Log.d("Log", "destroy");
+            Log.d("Log", "destroy" + startPause );
         }
     }
 
     @Override
     public void onBeginningOfSpeech() {
-        Log.d("Log", "onBeginningOfSpeech");
+        Log.d("Log", "onBeginningOfSpeech" + startPause);
         //progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onBufferReceived(byte[] buffer) {
-        Log.d("Log", "onBufferReceived: " + buffer);
+        Log.d("Log", "onBufferReceived: " + buffer + startPause);
     }
 
     @Override
     public void onEndOfSpeech() {
-        Log.d("Log", "onEndOfSpeech");
+        Log.d("Log", "onEndOfSpeech" + startPause);
         //progressBar.setVisibility(View.INVISIBLE);
-        startPause = true;
         //recordbtn.setEnabled(true);
     }
 
     @Override
     public void onError(int errorCode) {
         String errorMessage = getErrorText(errorCode);
-        Log.d("Log", "FAILED " + errorMessage);
-        startPause = true;
+        Log.d("Log", "FAILED " + errorMessage + startPause);
+        //recordbtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_microphone_2));
         if(errorCode == SpeechRecognizer.ERROR_NO_MATCH){
             speech.startListening(recognizerIntent);
-            startPause = false;
+            //startPause = false;
         }
-        //progressBar.setVisibility(View.INVISIBLE);
-        returnedText.setText(errorMessage);
-        //recordbtn.setEnabled(true);
+        /*else {//por los momentos quitaremos que se impriman los errores
+            //startPause = true;
+            //progressBar.setVisibility(View.INVISIBLE);
+            returnedText.setText(errorMessage);
+            //recordbtn.setEnabled(true);
+        }*/
     }
 
     @Override
@@ -138,10 +155,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onPartialResults(Bundle arg0) {
-        Log.d("Log", "onPartialResults");
+        Log.d("Log", "onPartialResults" + startPause);
 
         ArrayList<String> matches = arg0.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String text = "";
+        Log.d("Log", "texto : " + matches.get(0));
+        writeToSDFile(matches.get(0));
+
 
         //(se debe quitar lo que viene despues si se descomenta esto)
         /*for (String result : matches)
@@ -151,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         text = matches.get(0); //  Remove this line while uncommenting above    codes
         returnedText.setText(text);
+
     }
 
     @Override
@@ -223,4 +244,41 @@ class Function {
         return true;
     }
 
+    public static void writeToSDFile(String speechToTextData){
+
+        // Find the root of the external storage.
+        // See http://developer.android.com/guide/topics/data/data-  storage.html#filesExternal
+
+        File root = android.os.Environment.getExternalStorageDirectory();
+
+        File dir = new File (root.getAbsolutePath() + "/folder");
+        //File dir = new File ("/folder");
+        dir.mkdirs();//no se está creando
+        File file = new File(dir, "text.txt");
+        //FileWriter file = null;
+        //file = new FileWriter("text.txt");
+        try {
+            FileOutputStream f = new FileOutputStream(file);
+            PrintWriter pw = new PrintWriter(f);
+            //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(f));
+
+            //bw.write(speechToTextData);
+            pw.flush();
+            pw.close();
+            f.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /*try {
+            Intent intent = new Intent(Intent.ACTION_EDIT);
+            Uri uri = Uri.fromFile(file);
+            intent.setDataAndType(uri, "plain/text");
+            startActivity(intent);
+        } catch(Exception ex) {
+            Log.e("tag", "No file browser installed. " + ex.getMessage());
+        }*/
+    }
 }

@@ -34,6 +34,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static com.softlab_roxana.speechtotext.Function.createFile;
+import static com.softlab_roxana.speechtotext.Function.write;
 import static com.softlab_roxana.speechtotext.Function.writeToSDFile;
 
 public class MainActivity extends AppCompatActivity implements RecognitionListener{
@@ -44,7 +46,11 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private SpeechRecognizer speech = null;
     private Intent recognizerIntent;
     static final int REQUEST_PERMISSION_KEY = 1;
+    private int b = 0;
+    private int band = 0;
     private Boolean startPause = true;
+    private String[] words;
+    private String[] words2;
     ContextCompat context;
 
     @Override
@@ -159,8 +165,37 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         ArrayList<String> matches = arg0.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String text = "";
-        Log.d("Log", "texto : " + matches.get(0));
-        writeToSDFile(matches.get(0));
+        File file = createFile ();
+        String texto = matches.get(0);
+        words = texto.split("\\s+");
+
+        if (b==0){
+            write(file);
+            words2 = texto.split("\\s+");
+            b=1;
+        }
+
+        Log.d("Log", "texto : " + matches.get(0) + " " +  words[0] + " " + words.length + " " + words2[0] + " " + words2.length);
+        if ((words[0] == words2[0]) & (words.length>=words2.length)){
+            //words2 = words;
+            Log.d("Log", "Entró en el de iguales");
+            //band= 0;
+        }
+        else{
+            //Log.d("error", "words : " + matches.get(0) + words[0] + words.length);
+            //band++;
+            //if (band == words.length) {
+            for (int i=0; i < words2.length; ++i){
+                writeToSDFile(words2[i] + " ",file);
+                words2 = words;
+                Log.d("Log", "Entró en el de diferentes");
+            //}
+                //words2 = words;
+            }
+        }
+
+
+        //writeToSDFile(" " + matches.get(0),file);
 
 
         //(se debe quitar lo que viene despues si se descomenta esto)
@@ -244,28 +279,48 @@ class Function {
         return true;
     }
 
-    public static void writeToSDFile(String speechToTextData){
+
+    public static File createFile (){
+        File root = android.os.Environment.getExternalStorageDirectory();
+
+        File dir = new File (root.getAbsolutePath() + "/folder");
+        dir.mkdirs();
+        File file = new File(dir, "text.txt");
+        return file;
+    }
+
+    public static void write (File file) {
+        try {
+            FileOutputStream f = new FileOutputStream(file);
+            f.write("".getBytes());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void writeToSDFile(String speechToTextData, File file){
 
         // Find the root of the external storage.
         // See http://developer.android.com/guide/topics/data/data-  storage.html#filesExternal
 
-        File root = android.os.Environment.getExternalStorageDirectory();
-
-        File dir = new File (root.getAbsolutePath() + "/folder");
-        //File dir = new File ("/folder");
-        dir.mkdirs();//no se está creando
-        File file = new File(dir, "text.txt");
-        //FileWriter file = null;
-        //file = new FileWriter("text.txt");
         try {
-            FileOutputStream f = new FileOutputStream(file);
-            PrintWriter pw = new PrintWriter(f);
+            FileWriter fw = new FileWriter(file, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(speechToTextData);
+            bw.close();
+
+            //FileOutputStream f = new FileOutputStream(file);
+            //f.write(speechToTextData.getBytes());
+            //PrintWriter pw = new PrintWriter(f);
             //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(f));
 
             //bw.write(speechToTextData);
-            pw.flush();
-            pw.close();
-            f.close();
+            //pw.flush();
+            //pw.close();
+            //f.flush();
+            //f.close();
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

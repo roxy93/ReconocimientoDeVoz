@@ -79,9 +79,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         /*
-        Minimum time to listen in millis. Here 15 seconds
+        Minimum time to listen in millis. Here 300 seconds
          */
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 2000000);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 300000);
         recognizerIntent.putExtra("android.speech.extra.DICTATION_MODE", true);
 
         recordbtn.setOnClickListener(new View.OnClickListener() {
@@ -115,24 +115,24 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         super.onPause();
         if (speech != null) {
             speech.destroy();
-            Log.d("Log", "destroy" + startPause );
+            Log.d("Log", "destroy");
         }
     }
 
     @Override
     public void onBeginningOfSpeech() {
-        Log.d("Log", "onBeginningOfSpeech" + startPause);
+        Log.d("Log", "onBeginningOfSpeech");
         //progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onBufferReceived(byte[] buffer) {
-        Log.d("Log", "onBufferReceived: " + buffer + startPause);
+        Log.d("Log", "onBufferReceived: " + buffer);
     }
 
     @Override
     public void onEndOfSpeech() {
-        Log.d("Log", "onEndOfSpeech" + startPause);
+        Log.d("Log", "onEndOfSpeech");
         //progressBar.setVisibility(View.INVISIBLE);
         //recordbtn.setEnabled(true);
     }
@@ -140,12 +140,26 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     @Override
     public void onError(int errorCode) {
         String errorMessage = getErrorText(errorCode);
-        Log.d("Log", "FAILED " + errorMessage + startPause);
+        Log.d("Log", "FAILED " + errorMessage);
         //recordbtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_microphone_2));
-        if(errorCode == SpeechRecognizer.ERROR_NO_MATCH){
+
+        b=1;
+        speech.cancel();
+        speech.startListening(recognizerIntent);
+
+
+        /*if(errorCode == SpeechRecognizer.ERROR_NO_MATCH){
+            b=1;
             speech.startListening(recognizerIntent);
             //startPause = false;
         }
+        if(errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT){
+            b=1;
+            speech.startListening(recognizerIntent);
+            //startPause = false;
+        }*/
+
+
         /*else {//por los momentos quitaremos que se impriman los errores
             //startPause = true;
             //progressBar.setVisibility(View.INVISIBLE);
@@ -169,23 +183,34 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         String texto = matches.get(0);
         words = texto.split("\\s+");
 
+        Log.d("Log", "valoooooooor de bandera " + band);
         if (b==0){
             write(file);
             words2 = texto.split("\\s+");
             b=1;
         }
 
-        Log.d("Log", "texto : " + matches.get(0) + " " +  words[0] + " " + words.length + " " + words2[0] + " " + words2.length);
+        if (band == 1){
+            //writeToSDFile(texto + " ",file);
+            for (int i=0; i < words2.length; ++i){
+                writeToSDFile(words2[i] + " ",file);
+            }
+        }
+        band = 0;
+
+        words2=words;
+
+        Log.d("Log", "valoooooooor de bandera " + band);
 
 
-        if ((words[0].equals(words2[0])) & (words.length>=words2.length)){
+        /*Log.d("Log", "texto : " + matches.get(0) + " " +  words[0] + " " + words.length + " " + words2[0] + " " + words2.length);*/
+        Log.d("Log", "texto : " + matches.get(0) + " " +  words[0] + " " + words.length);
+
+        /*if ((words[0].equals(words2[0])) & (words.length>=words2.length)){
             words2 = words;
             Log.d("Log", "Entró en el de iguales");
-            //band= 0;
         }
         else{
-            //Log.d("error", "words : " + matches.get(0) + words[0] + words.length);
-            //band++;
             if (words.length < 5) {
 
             for (int i=0; i < words2.length; ++i){
@@ -194,11 +219,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 Log.d("Log", "Entró en el de diferentes");
             }
             words2 = words;
-        }
+        }*/
 
-
-
-        //writeToSDFile(" " + matches.get(0),file);
 
 
         //(se debe quitar lo que viene despues si se descomenta esto)
@@ -219,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onResults(Bundle results) {
+        band=1;
         speech.startListening(recognizerIntent);//prueba
         Log.d("Log", "onResults");
 

@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         /*
         Minimum time to listen in millis. Here 15 seconds
          */
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 15000);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 2000000);
         recognizerIntent.putExtra("android.speech.extra.DICTATION_MODE", true);
 
         recordbtn.setOnClickListener(new View.OnClickListener() {
@@ -176,7 +176,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }
 
         Log.d("Log", "texto : " + matches.get(0) + " " +  words[0] + " " + words.length + " " + words2[0] + " " + words2.length);
-        /*if ((words[0].equals(words2[0])) & (words.length>=words2.length)){
+
+
+        if ((words[0].equals(words2[0])) & (words.length>=words2.length)){
             words2 = words;
             Log.d("Log", "Entró en el de iguales");
             //band= 0;
@@ -192,25 +194,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 Log.d("Log", "Entró en el de diferentes");
             }
             words2 = words;
-        }*/
-
-        if (words[0].equals(words2[0])){
-            words2 = words;
-            Log.d("Log", "Entró en el de iguales");
-            //band= 0;
         }
-        else{
-            //Log.d("error", "words : " + matches.get(0) + words[0] + words.length);
-            //band++;
-            if (words.length < 5) {
 
-                for (int i=0; i < words2.length; ++i){
-                    writeToSDFile(words2[i] + " ",file);
-                }
-                Log.d("Log", "Entró en el de diferentes");
-            }
-            words2 = words;
-        }
 
 
         //writeToSDFile(" " + matches.get(0),file);

@@ -48,10 +48,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     static final int REQUEST_PERMISSION_KEY = 1;
     private int b = 0;
     private int band = 0;
+    private int band2 = 0;
     private Boolean startPause = true;
     private String[] words;
     private String[] words2;
-    ContextCompat context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,11 +144,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         //recordbtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_microphone_2));
 
         b=1;
-        speech.cancel();
-        speech.startListening(recognizerIntent);
+        //speech.stopListening();
+        //speech.cancel();
+
+       // speech.startListening(recognizerIntent);
 
 
-        /*if(errorCode == SpeechRecognizer.ERROR_NO_MATCH){
+        if(errorCode == SpeechRecognizer.ERROR_NO_MATCH){
             b=1;
             speech.startListening(recognizerIntent);
             //startPause = false;
@@ -157,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             b=1;
             speech.startListening(recognizerIntent);
             //startPause = false;
-        }*/
+        }
 
 
         /*else {//por los momentos quitaremos que se impriman los errores
@@ -179,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         ArrayList<String> matches = arg0.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String text = "";
+        band2 = 0;
         File file = createFile ();
         String texto = matches.get(0);
         words = texto.split("\\s+");
@@ -249,6 +252,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onRmsChanged(float rmsdB) {
+        if (rmsdB == 10.0){
+            band2++;
+        }
+        if (band2 == 70){
+            speech.startListening(recognizerIntent);
+            band2=0;
+        }
         Log.d("Log", "onRmsChanged: " + rmsdB);
         //progressBar.setProgress((int) rmsdB);
 

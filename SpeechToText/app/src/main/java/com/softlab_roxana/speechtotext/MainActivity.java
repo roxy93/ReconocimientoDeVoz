@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private int b = 0;
     private int band = 0;
     private int band2 = 0;
+    private float cont =0;
+    private float contPrev;
     private Boolean startPause = true;
     private String[] words;
     private String[] words2;
@@ -143,23 +145,35 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         Log.d("Log", "FAILED " + errorMessage);
         //recordbtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_microphone_2));
 
-        b=1;
-        //speech.stopListening();
-        //speech.cancel();
+        //b=1;
+        speech.stopListening();
+        speech.cancel();
 
-       // speech.startListening(recognizerIntent);
+        speech.startListening(recognizerIntent);
 
+        /*if (errorCode == SpeechRecognizer.ERROR_RECOGNIZER_BUSY){
+            b=1;
+            speech.stopListening();
+           // speech.cancel();
+            speech.startListening(recognizerIntent);
+        }
 
+        if(errorCode == SpeechRecognizer.ERROR_NETWORK){
+            b=1;
+            speech.startListening(recognizerIntent);
+        }
         if(errorCode == SpeechRecognizer.ERROR_NO_MATCH){
             b=1;
             speech.startListening(recognizerIntent);
-            //startPause = false;
         }
         if(errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT){
             b=1;
+            speech.stopListening();
+            //speech.cancel();
             speech.startListening(recognizerIntent);
-            //startPause = false;
-        }
+        }*/
+
+
 
 
         /*else {//por los momentos quitaremos que se impriman los errores
@@ -246,20 +260,35 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onResults(Bundle results) {
         band=1;
         speech.startListening(recognizerIntent);//prueba
+        //b = 1;
         Log.d("Log", "onResults");
 
     }
 
     @Override
     public void onRmsChanged(float rmsdB) {
-        if (rmsdB == 10.0){
+
+        if (cont == 0){
+            contPrev=rmsdB;
+        }
+
+        cont=rmsdB;
+
+        if (cont == contPrev){
             band2++;
         }
-        if (band2 == 70){
+        else{
+            cont = 0;
+        }
+        if (band2 == 60){
+            //speech.stopListening();
+            //speech.cancel();
             speech.startListening(recognizerIntent);
             band2=0;
+            cont=0;
+            contPrev=0;
         }
-        Log.d("Log", "onRmsChanged: " + rmsdB);
+        Log.d("Log", "onRmsChanged: " + rmsdB + " Cont: " + cont + " ContPrev: " + contPrev);
         //progressBar.setProgress((int) rmsdB);
 
     }

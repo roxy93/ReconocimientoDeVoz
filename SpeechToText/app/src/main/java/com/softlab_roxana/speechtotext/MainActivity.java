@@ -81,9 +81,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         /*
-        Minimum time to listen in millis. Here 300 seconds
+        Minimum time to listen in millis. Here 100 seconds
          */
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 300000);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 100000);
         recognizerIntent.putExtra("android.speech.extra.DICTATION_MODE", true);
 
         recordbtn.setOnClickListener(new View.OnClickListener() {
@@ -112,10 +112,24 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         super.onResume();
     }
 
+
     @Override
     protected void onPause() {
         super.onPause();
         if (speech != null) {
+            speech.stopListening();
+            speech.cancel();
+            speech.startListening(recognizerIntent);
+            Log.d("Log", "reconociendo de nuevo");
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (speech != null) {
+            speech.stopListening();
+            speech.cancel();
             speech.destroy();
             Log.d("Log", "destroy");
         }

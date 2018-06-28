@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         /*
         Minimum time to listen in millis. Here 100 seconds
          */
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 100000);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 300000);
         recognizerIntent.putExtra("android.speech.extra.DICTATION_MODE", true);
 
         recordbtn.setOnClickListener(new View.OnClickListener() {
@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         else{
             cont = 0;
         }
-        if (band2 == 60){
+        if (band2 == 40){
             //speech.stopListening();
             //speech.cancel();
             speech.startListening(recognizerIntent);
@@ -302,7 +302,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             cont=0;
             contPrev=0;
         }
-        Log.d("Log", "onRmsChanged: " + rmsdB + " Cont: " + cont + " ContPrev: " + contPrev);
+        //Log.d("Log", "onRmsChanged: " + rmsdB + " Cont: " + cont + " ContPrev: " + contPrev);
+        Log.d("Log", "onRmsChanged: " + rmsdB);
         //progressBar.setProgress((int) rmsdB);
 
     }

@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -42,6 +43,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     private TextView returnedText;
     ImageButton recordbtn;
+    ImageView lv1;
+    ImageView lv2;
+    ImageView lv3;
+    ImageView lv4;
+    ImageView lv5;
+    ImageView lv6;
+    ImageView lv7;
     private ProgressBar progressBar;
     private SpeechRecognizer speech = null;
     private Intent recognizerIntent;
@@ -60,9 +68,16 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         super.onCreate(savedInstanceState);
         //getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
-        returnedText = (TextView) findViewById(R.id.txtSpeechInput);
+        returnedText = findViewById(R.id.txtSpeechInput);
         //progressBar = (ProgressBar) findViewById(R.id.progressBar1);
-        recordbtn = (ImageButton) findViewById(R.id.SpeakButton);
+        recordbtn = findViewById(R.id.SpeakButton);
+        lv1=findViewById(R.id.lv1);
+        lv2=findViewById(R.id.lv2);
+        lv3=findViewById(R.id.lv3);
+        lv4=findViewById(R.id.lv4);
+        lv5=findViewById(R.id.lv5);
+        lv6=findViewById(R.id.lv6);
+        lv7=findViewById(R.id.lv7);
 
         String[] PERMISSIONS = {Manifest.permission.RECORD_AUDIO};
         if(!Function.hasPermissions(this, PERMISSIONS)){
@@ -73,8 +88,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         speech = SpeechRecognizer.createSpeechRecognizer(this);
         speech.setRecognitionListener(this);
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en_US");
         //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());//toma el lenguaje del teléfono
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
                 this.getPackageName());
         //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
@@ -103,6 +120,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     Log.d("Log", "STOP: " + startPause);
                     speech.stopListening();
                     speech.cancel();
+                    lv1.setImageResource(R.drawable.blanco);
+                    lv2.setImageResource(R.drawable.blanco);
+                    lv3.setImageResource(R.drawable.blanco);
+                    lv4.setImageResource(R.drawable.blanco);
+                    lv5.setImageResource(R.drawable.blanco);
+                    lv6.setImageResource(R.drawable.blanco);
+                    lv7.setImageResource(R.drawable.blanco);
                 }
             }
         });
@@ -119,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         if (speech != null) {
             speech.stopListening();
             speech.cancel();
-            speech.startListening(recognizerIntent);
+            //speech.startListening(recognizerIntent);
             Log.d("Log", "reconociendo de nuevo");
         }
     }
@@ -284,6 +308,88 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         if (cont == 0){
             contPrev=rmsdB;
+            if (startPause == false) {
+
+                if (rmsdB < -2){
+                lv1.setImageResource(R.drawable.blanco);
+                lv2.setImageResource(R.drawable.blanco);
+                lv3.setImageResource(R.drawable.blanco);
+                lv4.setImageResource(R.drawable.blanco);
+                lv5.setImageResource(R.drawable.blanco);
+                lv6.setImageResource(R.drawable.blanco);
+                lv7.setImageResource(R.drawable.blanco);
+                }
+
+                if (rmsdB >= -2 & rmsdB < 0){
+                lv1.setImageResource(R.drawable.azul);
+                lv2.setImageResource(R.drawable.blanco);
+                lv3.setImageResource(R.drawable.blanco);
+                lv4.setImageResource(R.drawable.blanco);
+                lv5.setImageResource(R.drawable.blanco);
+                lv6.setImageResource(R.drawable.blanco);
+                lv7.setImageResource(R.drawable.blanco);
+                }
+
+                if (rmsdB >= 0 & rmsdB < 2){
+                lv1.setImageResource(R.drawable.azul);
+                lv2.setImageResource(R.drawable.azul_verde);
+                lv3.setImageResource(R.drawable.blanco);
+                lv4.setImageResource(R.drawable.blanco);
+                lv5.setImageResource(R.drawable.blanco);
+                lv6.setImageResource(R.drawable.blanco);
+                lv7.setImageResource(R.drawable.blanco);
+                }
+
+                if (rmsdB >= 2 & rmsdB < 4){
+                lv1.setImageResource(R.drawable.azul);
+                lv2.setImageResource(R.drawable.azul_verde);
+                lv3.setImageResource(R.drawable.verde);
+                lv4.setImageResource(R.drawable.blanco);
+                lv5.setImageResource(R.drawable.blanco);
+                lv6.setImageResource(R.drawable.blanco);
+                lv7.setImageResource(R.drawable.blanco);
+                }
+
+                if (rmsdB >= 4 & rmsdB < 6){
+                lv1.setImageResource(R.drawable.azul);
+                lv2.setImageResource(R.drawable.azul_verde);
+                lv3.setImageResource(R.drawable.verde);
+                lv4.setImageResource(R.drawable.amarillo_naranja);
+                lv5.setImageResource(R.drawable.blanco);
+                lv6.setImageResource(R.drawable.blanco);
+                lv7.setImageResource(R.drawable.blanco);
+                }
+
+                if (rmsdB >= 6 & rmsdB < 8){
+                lv1.setImageResource(R.drawable.azul);
+                lv2.setImageResource(R.drawable.azul_verde);
+                lv3.setImageResource(R.drawable.verde);
+                lv4.setImageResource(R.drawable.amarillo_naranja);
+                lv5.setImageResource(R.drawable.naranja);
+                lv6.setImageResource(R.drawable.blanco);
+                lv7.setImageResource(R.drawable.blanco);
+                }
+
+                if (rmsdB >= 8 & rmsdB < 9){
+                lv1.setImageResource(R.drawable.azul);
+                lv2.setImageResource(R.drawable.azul_verde);
+                lv3.setImageResource(R.drawable.verde);
+                lv4.setImageResource(R.drawable.amarillo_naranja);
+                lv5.setImageResource(R.drawable.naranja);
+                lv6.setImageResource(R.drawable.naranja_rojo);
+                lv7.setImageResource(R.drawable.blanco);
+                }
+
+                if (rmsdB >= 9) {
+                lv1.setImageResource(R.drawable.azul);
+                lv2.setImageResource(R.drawable.azul_verde);
+                lv3.setImageResource(R.drawable.verde);
+                lv4.setImageResource(R.drawable.amarillo_naranja);
+                lv5.setImageResource(R.drawable.naranja);
+                lv6.setImageResource(R.drawable.naranja_rojo);
+                lv7.setImageResource(R.drawable.rojo);
+                }
+            }
         }
 
         cont=rmsdB;
@@ -293,6 +399,86 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }
         else{
             cont = 0;
+            if (startPause == false) {
+                if (rmsdB < -2) {
+                    lv1.setImageResource(R.drawable.blanco);
+                    lv2.setImageResource(R.drawable.blanco);
+                    lv3.setImageResource(R.drawable.blanco);
+                    lv4.setImageResource(R.drawable.blanco);
+                    lv5.setImageResource(R.drawable.blanco);
+                    lv6.setImageResource(R.drawable.blanco);
+                    lv7.setImageResource(R.drawable.blanco);
+                }
+                if (rmsdB >= -2 & rmsdB < 0) {
+                    lv1.setImageResource(R.drawable.azul);
+                    lv2.setImageResource(R.drawable.blanco);
+                    lv3.setImageResource(R.drawable.blanco);
+                    lv4.setImageResource(R.drawable.blanco);
+                    lv5.setImageResource(R.drawable.blanco);
+                    lv6.setImageResource(R.drawable.blanco);
+                    lv7.setImageResource(R.drawable.blanco);
+                }
+
+                if (rmsdB >= 0 & rmsdB < 2) {
+                    lv1.setImageResource(R.drawable.azul);
+                    lv2.setImageResource(R.drawable.azul_verde);
+                    lv3.setImageResource(R.drawable.blanco);
+                    lv4.setImageResource(R.drawable.blanco);
+                    lv5.setImageResource(R.drawable.blanco);
+                    lv6.setImageResource(R.drawable.blanco);
+                    lv7.setImageResource(R.drawable.blanco);
+                }
+
+                if (rmsdB >= 2 & rmsdB < 4) {
+                    lv1.setImageResource(R.drawable.azul);
+                    lv2.setImageResource(R.drawable.azul_verde);
+                    lv3.setImageResource(R.drawable.verde);
+                    lv4.setImageResource(R.drawable.blanco);
+                    lv5.setImageResource(R.drawable.blanco);
+                    lv6.setImageResource(R.drawable.blanco);
+                    lv7.setImageResource(R.drawable.blanco);
+                }
+
+                if (rmsdB >= 4 & rmsdB < 6) {
+                    lv1.setImageResource(R.drawable.azul);
+                    lv2.setImageResource(R.drawable.azul_verde);
+                    lv3.setImageResource(R.drawable.verde);
+                    lv4.setImageResource(R.drawable.amarillo_naranja);
+                    lv5.setImageResource(R.drawable.blanco);
+                    lv6.setImageResource(R.drawable.blanco);
+                    lv7.setImageResource(R.drawable.blanco);
+                }
+
+                if (rmsdB >= 6 & rmsdB < 8) {
+                    lv1.setImageResource(R.drawable.azul);
+                    lv2.setImageResource(R.drawable.azul_verde);
+                    lv3.setImageResource(R.drawable.verde);
+                    lv4.setImageResource(R.drawable.amarillo_naranja);
+                    lv5.setImageResource(R.drawable.naranja);
+                    lv6.setImageResource(R.drawable.blanco);
+                    lv7.setImageResource(R.drawable.blanco);
+                }
+
+                if (rmsdB >= 8 & rmsdB < 9) {
+                    lv1.setImageResource(R.drawable.azul);
+                    lv2.setImageResource(R.drawable.azul_verde);
+                    lv3.setImageResource(R.drawable.verde);
+                    lv4.setImageResource(R.drawable.amarillo_naranja);
+                    lv5.setImageResource(R.drawable.naranja);
+                    lv6.setImageResource(R.drawable.naranja_rojo);
+                    lv7.setImageResource(R.drawable.blanco);
+                }
+
+                if (rmsdB >= 9) {
+                    lv1.setImageResource(R.drawable.azul);
+                    lv2.setImageResource(R.drawable.azul_verde);
+                    lv3.setImageResource(R.drawable.verde);
+                    lv4.setImageResource(R.drawable.amarillo_naranja);
+                    lv5.setImageResource(R.drawable.naranja);
+                    lv6.setImageResource(R.drawable.naranja_rojo);
+                    lv7.setImageResource(R.drawable.rojo);
+                }
+            }
         }
         if (band2 == 40){
             //speech.stopListening();

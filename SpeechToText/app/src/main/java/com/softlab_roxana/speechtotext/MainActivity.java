@@ -57,7 +57,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private int b = 0;
     private int band = 0;
     private int band2 = 0;
-    private float cont =0;
+    private long Tini = 0;
+    private long Tfin = 0;
+    private long Time =0;
+    private long seg = 0;
+    private long min = 0;
+    private float cont = 0;
     private float contPrev;
     private Boolean startPause = true;
     private String[] words;
@@ -89,7 +94,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         speech.setRecognitionListener(this);
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en_US");
+        //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en_US");//Para el ingles
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es_ES");//Para el ingles
         //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
         //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());//toma el lenguaje del teléfono
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
@@ -143,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         if (speech != null) {
             speech.stopListening();
             speech.cancel();
+            speech.destroy();
             //speech.startListening(recognizerIntent);
             Log.d("Log", "reconociendo de nuevo");
         }
@@ -242,41 +249,27 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         if (b==0){
             write(file);
             words2 = texto.split("\\s+");
+            Tini = System.currentTimeMillis();
             b=1;
         }
 
         if (band == 1){
+            Tfin = System.currentTimeMillis();
+            Time = Tfin - Tini;
+            seg = Time/1000;
             //writeToSDFile(texto + " ",file);
             for (int i=0; i < words2.length; ++i){
-                writeToSDFile(words2[i] + " ",file);
+                writeToSDFile(words2[i] + " " ,file);
             }
+            writeToSDFile(" " + seg + '\n',file);
+
         }
         band = 0;
 
         words2=words;
 
         Log.d("Log", "valoooooooor de bandera " + band);
-
-
-        /*Log.d("Log", "texto : " + matches.get(0) + " " +  words[0] + " " + words.length + " " + words2[0] + " " + words2.length);*/
         Log.d("Log", "texto : " + matches.get(0) + " " +  words[0] + " " + words.length);
-
-        /*if ((words[0].equals(words2[0])) & (words.length>=words2.length)){
-            words2 = words;
-            Log.d("Log", "Entró en el de iguales");
-        }
-        else{
-            if (words.length < 5) {
-
-            for (int i=0; i < words2.length; ++i){
-                writeToSDFile(words2[i] + " ",file);
-            }
-                Log.d("Log", "Entró en el de diferentes");
-            }
-            words2 = words;
-        }*/
-
-
 
         //(se debe quitar lo que viene despues si se descomenta esto)
         /*for (String result : matches)
@@ -577,29 +570,10 @@ class Function {
             bw.write(speechToTextData);
             bw.close();
 
-            //FileOutputStream f = new FileOutputStream(file);
-            //f.write(speechToTextData.getBytes());
-            //PrintWriter pw = new PrintWriter(f);
-            //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(f));
-
-            //bw.write(speechToTextData);
-            //pw.flush();
-            //pw.close();
-            //f.flush();
-            //f.close();
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*try {
-            Intent intent = new Intent(Intent.ACTION_EDIT);
-            Uri uri = Uri.fromFile(file);
-            intent.setDataAndType(uri, "plain/text");
-            startActivity(intent);
-        } catch(Exception ex) {
-            Log.e("tag", "No file browser installed. " + ex.getMessage());
-        }*/
     }
 }

@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private long Tfin = 0;
     private long Time =0;
     private long seg = 0;
-    private long min = 0;
+    private int min = 0;
     private float cont = 0;
     private float contPrev;
     private Boolean startPause = true;
@@ -257,12 +257,22 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             Tfin = System.currentTimeMillis();
             Time = Tfin - Tini;
             seg = Time/1000;
-            //writeToSDFile(texto + " ",file);
-            for (int i=0; i < words2.length; ++i){
-                writeToSDFile(words2[i] + " " ,file);
-            }
-            writeToSDFile(" " + seg + '\n',file);
 
+            if (seg<60){
+                min = 0;
+                for (int i=0; i < words2.length; ++i){
+                    writeToSDFile(words2[i] + " " ,file);
+                }
+                writeToSDFile(" " + min + " " + seg + '\n',file);
+            }
+            else{
+                min = (int) (seg/60);
+                seg = seg - (min*60);
+                for (int i=0; i < words2.length; ++i){
+                    writeToSDFile(words2[i] + " " ,file);
+                }
+                writeToSDFile(" " + min + " " + seg + '\n',file);
+            }
         }
         band = 0;
 

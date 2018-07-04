@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             public void onClick(View p1) {
                 //progressBar.setVisibility(View.VISIBLE);
                 if (startPause == true) {
+                    Tini = System.currentTimeMillis();
                     speech.startListening(recognizerIntent);
                     startPause = false;
                     recordbtn.setImageResource(R.drawable.ic_microphone_3);
@@ -249,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         if (b==0){
             write(file);
             words2 = texto.split("\\s+");
-            Tini = System.currentTimeMillis();
+            /*Tini = System.currentTimeMillis();*/
             b=1;
         }
 

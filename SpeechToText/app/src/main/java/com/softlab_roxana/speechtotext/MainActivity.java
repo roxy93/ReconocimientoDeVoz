@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private long Time =0;
     private long seg = 0;
     private int min = 0;
+    private int hora = 0;
     private float cont = 0;
     private float contPrev;
     private Boolean startPause = true;

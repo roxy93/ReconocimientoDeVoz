@@ -4,17 +4,20 @@
     android:layout_height="match_parent"
     android:background="#35000000">
 
+
+
     <TextView
         android:id="@+id/txtSpeechInput"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:layout_alignParentTop="true"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/SpeakButton"
         android:layout_centerHorizontal="true"
+        android:padding="20dp"
+        android:scrollbars="vertical"
         android:layout_marginTop="30dp"
-        android:textSize="26sp"
-        android:textStyle="normal"
-        android:textColor="#151515"/>
+        android:textColor="#151515"
+        android:textSize="20sp"
+        android:textStyle="normal" />
 
     <!--android:maxLines = "4"-->
 

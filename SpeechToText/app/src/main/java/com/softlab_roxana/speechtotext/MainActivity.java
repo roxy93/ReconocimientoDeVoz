@@ -15,6 +15,7 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -76,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         //getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         returnedText = findViewById(R.id.txtSpeechInput);
+        returnedText.setMovementMethod(new ScrollingMovementMethod());
+
         //progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         recordbtn = findViewById(R.id.SpeakButton);
         lv1=findViewById(R.id.lv1);
@@ -106,9 +109,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         /*
-        Minimum time to listen in millis. Here 100 seconds
+        Minimum time to listen in millis. Here 300 seconds
          */
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 300000);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 100000);
         recognizerIntent.putExtra("android.speech.extra.DICTATION_MODE", true);
 
         recordbtn.setOnClickListener(new View.OnClickListener() {
@@ -194,8 +197,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         //recordbtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_microphone_2));
 
         //b=1;
-        speech.stopListening();
-        speech.cancel();
+       // speech.stopListening();
+        //speech.cancel();
 
         speech.startListening(recognizerIntent);
 
@@ -284,68 +287,21 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         band = 1;
         }
-            /*tFin = System.currentTimeMillis();
-            timeTotal = tFin - tIni;
-            seg = timeTotal/1000;
-
-            if (seg<60){
-                min = 0;
-            }
-            else{
-                min = (int) (seg/60);
-                seg = seg - (min*60);
-            }
-
-            if (min<60){
-                hora = 0;
-                for (int i=0; i < words2.length; ++i){
-                    writeToSDFile(words2[i] + " " ,file);
-                }
-                writeToSDFile(" " + hora + ":" + min + ":" + seg + '\n',file);
-            }
-            else{
-                hora = (int) (min/60);
-                min = min - (hora*60);
-                for (int i=0; i < words2.length; ++i){
-                    writeToSDFile(words2[i] + " " ,file);
-                }
-                writeToSDFile(" " + hora + ":" + min + ":" + seg + '\n',file);
-            }
-        }*/
-        //band = 0;
-
-        /*tFin = System.currentTimeMillis();
-        timeTotal = tFin - tIni;
-        seg = timeTotal/1000;
-
-        if (seg<60){
-            min = 0;
-        }
-        else{
-            min = (int) (seg/60);
-            seg = seg - (min*60);
-        }
-
-        if (min<60){
-            hora = 0;
-        }
-        else{
-            hora = (int) (min/60);
-            min = min - (hora*60);
-        }*/
 
         words2=words;
 
         Log.d("Log", "valoooooooor de bandera " + band);
         Log.d("Log", "texto : " + matches.get(0) + " " +  words[0] + " " + words.length);
 
-        //(se debe quitar lo que viene despues si se descomenta esto)
+
         /*for (String result : matches)
         {
             text += result + "\n";
         }*/
 
         text = matches.get(0); //  Remove this line while uncommenting above    codes
+
+
         returnedText.setText(text);
 
     }
@@ -569,7 +525,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 }
             }
         }
-        if (band2 == 40){
+        if (band2 == 70){//revisar esto
             //speech.stopListening();
             //speech.cancel();
             speech.startListening(recognizerIntent);

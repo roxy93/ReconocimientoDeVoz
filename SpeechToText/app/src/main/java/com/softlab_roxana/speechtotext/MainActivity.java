@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         //getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
         returnedText = findViewById(R.id.txtSpeechInput);
-        returnedText.setMovementMethod(new ScrollingMovementMethod());
+        returnedText.setMovementMethod(new ScrollingMovementMethod());//no sirve
 
         //progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         recordbtn = findViewById(R.id.SpeakButton);
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
 
         //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en_US");//Para el ingles
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es_ES");//Para el ingles
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es_ES");//Para el español
         //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
         //recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());//toma el lenguaje del teléfono
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         /*
         Minimum time to listen in millis. Here 300 seconds
          */
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 100000);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 200000);
         recognizerIntent.putExtra("android.speech.extra.DICTATION_MODE", true);
 
         recordbtn.setOnClickListener(new View.OnClickListener() {

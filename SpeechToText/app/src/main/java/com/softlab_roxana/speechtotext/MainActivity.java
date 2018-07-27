@@ -185,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onEndOfSpeech() {
+        speech.startListening(recognizerIntent);
         Log.d("Log", "onEndOfSpeech");
         //progressBar.setVisibility(View.INVISIBLE);
         //recordbtn.setEnabled(true);
@@ -192,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onError(int errorCode) {
-        String errorMessage = getErrorText(errorCode);
+        String errorMessage = getErrorText(errorCode);//nuevo..
         Log.d("Log", "FAILED " + errorMessage);
         //recordbtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_microphone_2));
 
@@ -525,14 +526,24 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 }
             }
         }
-        if (band2 == 70){//revisar esto
-            //speech.stopListening();
-            //speech.cancel();
+
+        if (band2 == 110){//revisar esto 70-50 - tiempo sin escuchar una palabra
+            speech.stopListening();
+            speech.cancel();
             speech.startListening(recognizerIntent);
             band2=0;
             cont=0;
             contPrev=0;
+            /*try {
+                Thread.sleep(1000);
+                speech.startListening(recognizerIntent);
+            }catch(InterruptedException ex)
+            {
+                Thread.currentThread().interrupt();
+            }*/
+
         }
+
         //Log.d("Log", "onRmsChanged: " + rmsdB + " Cont: " + cont + " ContPrev: " + contPrev);
         Log.d("Log", "onRmsChanged: " + rmsdB);
         //progressBar.setProgress((int) rmsdB);

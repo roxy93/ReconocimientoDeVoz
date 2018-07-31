@@ -1,6 +1,7 @@
 package com.softlab_roxana.speechtotext;
 
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +37,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static com.softlab_roxana.speechtotext.Function.resetTimer;
+import static com.softlab_roxana.speechtotext.Function.pauseTimer;
 import static com.softlab_roxana.speechtotext.Function.createFile;
 import static com.softlab_roxana.speechtotext.Function.write;
 import static com.softlab_roxana.speechtotext.Function.writeToSDFile;
@@ -72,6 +75,14 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private String[] words;
     private String[] words2;
     File file = createFile ();
+
+
+
+    private static final long START_TIME_IN_MILLIS = 20000; //AQUI
+    private CountDownTimer mCountDownTimer;
+    private boolean mTimerRunning;
+    private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,9 +169,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     protected void onPause() {
         super.onPause();
         if (speech != null) {
-            //speech.stopListening();
-            //speech.cancel();
-            //speech.destroy();
+            speech.stopListening();
+            speech.cancel();
+            speech.destroy();
 
             //speech.startListening(recognizerIntent);
             Log.d("Log", "reconociendo de nuevo");
@@ -180,6 +191,12 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onBeginningOfSpeech() {
+
+        if(band3==1){
+
+            //pauseTimer(mCountDownTimer, mTimerRunning);
+            //resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
+        }
         Log.d("Log", "onBeginningOfSpeech");
         //progressBar.setVisibility(View.VISIBLE);
     }
@@ -296,7 +313,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }
 
         words2=words;
-
+        //if (words[0].equals("a") | words[0].equals("y")){
+        //    resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
+        //    pauseTimer(mCountDownTimer, mTimerRunning);
+        //}
         Log.d("Log", "valoooooooor de bandera " + band);
         Log.d("Log", "texto : " + matches.get(0) + " " +  words[0] + " " + words.length);
 
@@ -321,7 +341,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onResults(Bundle results) {
-        if (words2.length > 0) {
+
+        //pauseTimer(mCountDownTimer, mTimerRunning);
+        //resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
+        if (words2 != null) {
             band = 0;
             tFin = System.currentTimeMillis();
             timeTotal = tFin - tIni;
@@ -359,7 +382,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onRmsChanged(float rmsdB) {
-
+        pauseTimer(mCountDownTimer, mTimerRunning);
+        resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
+        startTimer();
         if (cont == 0){
             contPrev=rmsdB;
             if (startPause == false) {
@@ -448,7 +473,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         cont=rmsdB;
 
-        if (cont == contPrev){
+        if (cont == contPrev ){
             band2++;
         }
         else{
@@ -536,7 +561,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             }
         }
         Log.d("log","band2: " + band2);
-        if (band2 >= 100){//revisar esto 70-50 - tiempo sin escuchar una palabra
+        if (band2 >= 80){//revisar esto 70-50 - tiempo sin escuchar una palabra
             Log.d("log","pass 80");
             //speech.cancel();
             //speech.startListening(recognizerIntent);
@@ -545,17 +570,18 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             //    speech.stopListening();
             //    speech.cancel();
             //    speech.startListening(recognizerIntent);
+            band3=1;
             cont2 = cont;
             cont=0;
             contPrev=0;
             band2=0;
-            //band3=1;
-            //if (cont2 == 10){
-            //if (mCurrentCallback == null) {
-            speech.startListening(recognizerIntent);
+
+            //speech.startListening(recognizerIntent);
 
             //}else{
-             //speech.stopListening();
+            //startTimer();
+            speech.stopListening();
+
 
             //}
                 //band3 = 1; //start en RMS
@@ -567,6 +593,60 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         //progressBar.setProgress((int) rmsdB);
 
     }
+
+    //-----------TIEMPO------------------
+    private void startTimer() {
+
+        mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTimeLeftInMillis = millisUntilFinished;
+            }
+            @Override
+            public void onFinish() {
+                speech.stopListening();
+                speech.cancel();
+
+
+                if (words2 != null) {
+                    band = 0;
+                    tFin = System.currentTimeMillis();
+                    timeTotal = tFin - tIni;
+                    seg = timeTotal / 1000;
+
+                    if (seg < 60) {
+                        min = 0;
+                    } else {
+                        min = (int) (seg / 60);
+                        seg = seg - (min * 60);
+                    }
+
+                    if (min < 60) {
+                        hora = 0;
+                        for (int i = 0; i < words2.length; ++i) {
+                            writeToSDFile(words2[i] + " ", file);
+                        }
+                        writeToSDFile(" F" + hora + ":" + min + ":" + seg + '\n', file);
+                    } else {
+                        hora = (int) (min / 60);
+                        min = min - (hora * 60);
+                        for (int i = 0; i < words2.length; ++i) {
+                            writeToSDFile(words2[i] + " ", file);
+                        }
+                        writeToSDFile(" F" + hora + ":" + min + ":" + seg + '\n', file);
+                    }
+                }
+
+                speech.startListening(recognizerIntent);
+                //onRmsChanged(4);
+                mTimerRunning = false;
+            }
+        }.start();
+        mTimerRunning = true;
+        Log.d("Log", "timer: " + mTimeLeftInMillis);
+    }
+    //-----------TIEMPO------------------
+
 
     public static String getErrorText(int errorCode) {
         String message;
@@ -658,4 +738,18 @@ class Function {
         }
     }
 
+    //-----------TIEMPO------------------
+    public static void pauseTimer(CountDownTimer mCountDownTimer, boolean mTimerRunning) {
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+            mTimerRunning = false;
+        }
+    }
+
+    public static void resetTimer(long mTimeLeftInMillis, long START_TIME_IN_MILLIS) {
+        mTimeLeftInMillis = START_TIME_IN_MILLIS;
+    }
+    //----------TIEMPO------------------
+
 }
+

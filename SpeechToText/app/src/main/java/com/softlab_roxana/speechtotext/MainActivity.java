@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
 
 
-    private static final long START_TIME_IN_MILLIS = 20000; //AQUI
+    private static final long START_TIME_IN_MILLIS = 15000; //AQUI
     private CountDownTimer mCountDownTimer;
     private boolean mTimerRunning;
     private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
@@ -345,6 +345,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         //pauseTimer(mCountDownTimer, mTimerRunning);
         //resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
         if (words2 != null) {
+            //writeToSDFile(" S" + hora + ":" + min + ":" + seg + '\n', file);
+            //tIni = (seg + (min*60) + (hora*60*60))*1000;
             band = 0;
             tFin = System.currentTimeMillis();
             timeTotal = tFin - tIni;
@@ -704,8 +706,18 @@ class Function {
         File root = android.os.Environment.getExternalStorageDirectory();
 
         File dir = new File (root.getAbsolutePath() + "/folder");
+
+        if (dir.exists()){
+            dir.delete();
+        }
         dir.mkdirs();
+
         File file = new File(dir, "text.txt");
+
+        if (dir.exists()){
+            file.delete();
+        }
+
         return file;
     }
 

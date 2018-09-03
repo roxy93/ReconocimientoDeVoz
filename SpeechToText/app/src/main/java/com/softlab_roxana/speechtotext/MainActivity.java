@@ -72,13 +72,17 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private float cont2 = 0;
     private float contPrev;
     private Boolean startPause = true;
+    private Boolean same = false;
     private String[] words;
+    private ArrayList<String> times = new ArrayList<>();
+    private String tiempo="";
     private String[] words2;
+    private String text = "";
     File file = createFile ();
 
 
 
-    private static final long START_TIME_IN_MILLIS = 15000; //AQUI
+    private static final long START_TIME_IN_MILLIS = 2000; //AQUI
     private CountDownTimer mCountDownTimer;
     private boolean mTimerRunning;
     private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
@@ -139,9 +143,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     speech.startListening(recognizerIntent);
                     startPause = false;
                     recordbtn.setImageResource(R.drawable.ic_microphone_3);
+                    pauseTimer(mCountDownTimer, mTimerRunning);
+                    resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
                     Log.d("Log", "START: " + startPause);
                 }
                 else{
+                    pauseTimer(mCountDownTimer, mTimerRunning);
+                    resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
                     recordbtn.setImageResource(R.drawable.ic_microphone_2);
                     startPause = true;
                     Log.d("Log", "STOP: " + startPause);
@@ -192,11 +200,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     @Override
     public void onBeginningOfSpeech() {
 
-        if(band3==1){
-
-            //pauseTimer(mCountDownTimer, mTimerRunning);
-            //resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
-        }
         Log.d("Log", "onBeginningOfSpeech");
         //progressBar.setVisibility(View.VISIBLE);
     }
@@ -265,30 +268,70 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onPartialResults(Bundle arg0) {
-        Log.d("Log", "onPartialResults " + startPause);
+        pauseTimer(mCountDownTimer, mTimerRunning);
+        resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
+        //startTimer();
+        //Log.d("Log", "onPartialResults " + startPause);
 
         ArrayList<String> matches = arg0.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        String text = "";
+
         band2 = 0;
         //band3 = 0;
         //File file = createFile ();
         String texto = matches.get(0);
-        words = texto.split("\\s+");
+        //words = texto.split("\\s+");
 
-        Log.d("Log", "valoooooooor de bandera " + band);
+        //Log.d("Log", "valoooooooor de bandera " + band);
+    if (text.length() > 100 & texto.length()<20){
+        //speech.stopListening();
+        //startTimer();
+        band=0;//para calcular el nuevo valor de tiempo de entrada
+        same = true;
 
+        //---------------PRUEBA------------------
+        timeTotal = tFin - tIni;
+        seg = timeTotal / 1000;
+
+        if (seg < 60) {
+            min = 0;
+        } else {
+            min = (int) (seg / 60);
+            seg = seg - (min * 60);
+        }
+
+        if (min < 60) {
+            hora = 0;
+
+            writeToSDFile(text + " ",file);
+            writeToSDFile(" F" + hora + ":" + min + ":" + seg + '\n', file);
+        } else {
+            hora = (int) (min / 60);
+            min = min - (hora * 60);
+
+            writeToSDFile(text + " ",file);
+            writeToSDFile(" F" + hora + ":" + min + ":" + seg + '\n', file);
+        }
+
+        //---------------------PRUEBA-------------------------------
+
+    }
         //Genera el archivo
         if (b==0){
             write(file);
-            words2 = texto.split("\\s+");
+            //words2 = texto.split("\\s+");
 
             b=1;
         }
 
         if (band == 0) {// primera palabra reconocida
 
-            tFin = System.currentTimeMillis();
-            timeTotal = tFin - tIni;
+            times=null;//limpiar tiempo
+            //if (same==true){
+                //tFin = System.currentTimeMillis();//ver si debo cambiar los 1000
+            //}else {
+                tFin = System.currentTimeMillis() - 1000;//ver si debo cambiar los 1000
+            //}
+                timeTotal = tFin - tIni;
             seg = timeTotal/1000;
 
             if (seg<60){
@@ -301,24 +344,22 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
             if (min<60){
                 hora = 0;
-                writeToSDFile(" S" + hora + ":" + min + ":" + seg + " ",file);
+
             }
             else{
                 hora = (int) (min/60);
                 min = min - (hora*60);
-                writeToSDFile(" S" + hora + ":" + min + ":" + seg + " ",file);
             }
-
+            writeToSDFile(" S" + hora + ":" + min + ":" + seg + " ",file);
         band = 1;
         }
+        //-----------  TIEMPO FINAL -------------------
+        tFin = System.currentTimeMillis() - 1000;
+        //-----------  TIEMPO FINAL -------------------
 
-        words2=words;
-        //if (words[0].equals("a") | words[0].equals("y")){
-        //    resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
-        //    pauseTimer(mCountDownTimer, mTimerRunning);
-        //}
-        Log.d("Log", "valoooooooor de bandera " + band);
-        Log.d("Log", "texto : " + matches.get(0) + " " +  words[0] + " " + words.length);
+        //words2=words;
+        //Log.d("Log", "valoooooooor de bandera " + band);
+        //Log.d("Log", "texto : " + matches.get(0) + " " +  words[0] + " " + words.length);
 
 
         /*for (String result : matches)
@@ -327,10 +368,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }*/
 
         text = matches.get(0); //  Remove this line while uncommenting above    codes
-
-
         returnedText.setText(text);
-
+        startTimer();
     }
 
     @Override
@@ -341,14 +380,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onResults(Bundle results) {
-
+        band = 0;
+        Log.d("Log", "onResults");
         //pauseTimer(mCountDownTimer, mTimerRunning);
         //resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
-        if (words2 != null) {
-            //writeToSDFile(" S" + hora + ":" + min + ":" + seg + '\n', file);
-            //tIni = (seg + (min*60) + (hora*60*60))*1000;
-            band = 0;
-            tFin = System.currentTimeMillis();
+        if (text != "") {//words2
+            //writeToSDFile(" S" + hora + ":" + min + ":" + seg + " ",file);
+            //tFin = System.currentTimeMillis()-5000;
             timeTotal = tFin - tIni;
             seg = timeTotal / 1000;
 
@@ -361,24 +399,29 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
             if (min < 60) {
                 hora = 0;
-                for (int i = 0; i < words2.length; ++i) {
+
+                writeToSDFile(text + " ",file);
+                /*for (int i = 0; i < words2.length; ++i) {
                     writeToSDFile(words2[i] + " ", file);
-                }
+                }*/
                 writeToSDFile(" F" + hora + ":" + min + ":" + seg + '\n', file);
             } else {
                 hora = (int) (min / 60);
                 min = min - (hora * 60);
-                for (int i = 0; i < words2.length; ++i) {
+
+                writeToSDFile(text + " ",file);
+                /*for (int i = 0; i < words2.length; ++i) {
                     writeToSDFile(words2[i] + " ", file);
-                }
+                }*/
                 writeToSDFile(" F" + hora + ":" + min + ":" + seg + '\n', file);
             }
         }
+        text="";
         //speech.stopListening();
         speech.startListening(recognizerIntent);//prueba
 
         //b = 1;
-        Log.d("Log", "onResults");
+
 
     }
 
@@ -476,9 +519,18 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         cont=rmsdB;
 
         if (cont == contPrev ){
+            /*if(!same){
+                pauseTimer(mCountDownTimer, mTimerRunning);
+                resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
+                startTimer();
+            }*/
             band2++;
+            /*same = true;*/
         }
         else{
+            /*pauseTimer(mCountDownTimer, mTimerRunning);
+            resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
+            same = false;*/
             cont = 0;
             //band2=0;
             if (startPause == false) {
@@ -572,8 +624,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             //    speech.stopListening();
             //    speech.cancel();
             //    speech.startListening(recognizerIntent);
-            band3=1;
-            cont2 = cont;
+            /*band3=1;
+            cont2 = cont;*/
             cont=0;
             contPrev=0;
             band2=0;
@@ -608,11 +660,11 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             public void onFinish() {
                 speech.stopListening();
                 speech.cancel();
+                band = 0;
 
-
-                if (words2 != null) {
-                    band = 0;
-                    tFin = System.currentTimeMillis();
+                if (text != "") {//words2
+                   // writeToSDFile(" S" + hora + ":" + min + ":" + seg + " ",file);
+                    //tFin = System.currentTimeMillis() - 10000;//Ver si debo cambiar este 10000
                     timeTotal = tFin - tIni;
                     seg = timeTotal / 1000;
 
@@ -625,20 +677,24 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
                     if (min < 60) {
                         hora = 0;
-                        for (int i = 0; i < words2.length; ++i) {
+
+                        writeToSDFile(text + " ",file);
+                        /*for (int i = 0; i < words2.length; ++i) {
                             writeToSDFile(words2[i] + " ", file);
-                        }
+                        }*/
                         writeToSDFile(" F" + hora + ":" + min + ":" + seg + '\n', file);
                     } else {
                         hora = (int) (min / 60);
                         min = min - (hora * 60);
-                        for (int i = 0; i < words2.length; ++i) {
+
+                        writeToSDFile(text + " ",file);
+                       /* for (int i = 0; i < words2.length; ++i) {
                             writeToSDFile(words2[i] + " ", file);
-                        }
+                        }*/
                         writeToSDFile(" F" + hora + ":" + min + ":" + seg + '\n', file);
                     }
                 }
-
+                text="";
                 speech.startListening(recognizerIntent);
                 //onRmsChanged(4);
                 mTimerRunning = false;
@@ -741,6 +797,7 @@ class Function {
             FileWriter fw = new FileWriter(file, true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(speechToTextData);
+            bw.flush();
             bw.close();
 
         } catch (FileNotFoundException e) {

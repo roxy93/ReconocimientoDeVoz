@@ -1,9 +1,7 @@
 package com.softlab_roxana.speechtotext;
 
-import android.net.Uri;
 import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.Manifest;
@@ -11,15 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -31,10 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import static com.softlab_roxana.speechtotext.Function.resetTimer;
 import static com.softlab_roxana.speechtotext.Function.pauseTimer;
@@ -72,16 +64,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private float contPrev;
     private Boolean startPause = true;
     private Boolean same = false;
-    private String[] words;
     private ArrayList<String> times = new ArrayList<>();
-    private String tiempo="";
-    private String[] words2;
     private String text = "";
     File file = createFile ();
 
 
 
-    private static final long START_TIME_IN_MILLIS = 5000; //AQUI
+    private static final long START_TIME_IN_MILLIS = 3000; //AQUI
     private CountDownTimer mCountDownTimer;
     private boolean mTimerRunning;
     private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
@@ -220,38 +209,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onError(int errorCode) {
         String errorMessage = getErrorText(errorCode);//nuevo..
         Log.d("Log", "FAILED " + errorMessage);
-        //recordbtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_microphone_2));
 
-        //b=1;
-        //speech.stopListening();
-        //speech.cancel();
-        //speech.startListening(recognizerIntent);
-
-        /*if (errorCode == SpeechRecognizer.ERROR_RECOGNIZER_BUSY){
-            b=1;
-            speech.stopListening();
-           // speech.cancel();
-            speech.startListening(recognizerIntent);
-        }
-
-        if(errorCode == SpeechRecognizer.ERROR_NETWORK){
-            b=1;
-            speech.startListening(recognizerIntent);
-        }
-        if(errorCode == SpeechRecognizer.ERROR_NO_MATCH){
-            b=1;
-            speech.startListening(recognizerIntent);
-        }*/
         if(errorCode == SpeechRecognizer.ERROR_SPEECH_TIMEOUT || errorCode == SpeechRecognizer.ERROR_NO_MATCH || errorCode == SpeechRecognizer.ERROR_NETWORK){
             b=1;
             //speech.stopListening();
             //speech.cancel();
             speech.startListening(recognizerIntent);
         }
-
-
-
-
         /*else {//por los momentos quitaremos que se impriman los errores
             //startPause = true;
             //progressBar.setVisibility(View.INVISIBLE);
@@ -269,21 +233,14 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onPartialResults(Bundle arg0) {
         pauseTimer(mCountDownTimer, mTimerRunning);
         resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
-        //startTimer();
-        //Log.d("Log", "onPartialResults " + startPause);
 
         ArrayList<String> matches = arg0.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
 
         band2 = 0;
-        //band3 = 0;
-        //File file = createFile ();
         String texto = matches.get(0);
-        //words = texto.split("\\s+");
 
         //Log.d("Log", "valoooooooor de bandera " + band);
     if (text.length() > 100 & texto.length()<20){
-        //speech.stopListening();
-        //startTimer();
         band=0;//para calcular el nuevo valor de tiempo de entrada
         same = true;
 
@@ -325,12 +282,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         if (band == 0) {// primera palabra reconocida
 
             times=null;//limpiar tiempo
-            //if (same==true){
-                //tFin = System.currentTimeMillis();//ver si debo cambiar los 1000
-            //}else {
-                tFin = System.currentTimeMillis() - 1000;//ver si debo cambiar los 1000
-            //}
-                timeTotal = tFin - tIni;
+            tFin = System.currentTimeMillis() - 1000;//ver si debo cambiar los 1000
+            timeTotal = tFin - tIni;
             seg = timeTotal/1000;
 
             if (seg<60){
@@ -356,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         tFin = System.currentTimeMillis() - 1000;
         //-----------  TIEMPO FINAL -------------------
 
-        //words2=words;
+
         //Log.d("Log", "valoooooooor de bandera " + band);
         //Log.d("Log", "texto : " + matches.get(0) + " " +  words[0] + " " + words.length);
 
@@ -381,8 +334,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void onResults(Bundle results) {
         band = 0;
         Log.d("Log", "onResults");
-        //pauseTimer(mCountDownTimer, mTimerRunning);
-        //resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
         if (text != "") {//words2
             //writeToSDFile(" S" + hora + ":" + min + ":" + seg + " ",file);
             //tFin = System.currentTimeMillis()-5000;
@@ -416,12 +367,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             }
         }
         text="";
-        //speech.stopListening();
         speech.startListening(recognizerIntent);//prueba
-
-        //b = 1;
-
-
     }
 
     @Override
@@ -518,13 +464,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         cont=rmsdB;
 
         if (cont == contPrev ){
-            /*if(!same){
-                pauseTimer(mCountDownTimer, mTimerRunning);
-                resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
-                startTimer();
-            }*/
             band2++;
-            /*same = true;*/
         }
         else{
             /*pauseTimer(mCountDownTimer, mTimerRunning);
@@ -629,16 +569,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             contPrev=0;
             band2=0;
 
-            //speech.startListening(recognizerIntent);
-
-            //}else{
-            //startTimer();
             speech.stopListening();
+            /*speech.cancel();
+            speech.startListening(recognizerIntent);*/
 
-
-            //}
-                //band3 = 1; //start en RMS
-            //}
         }
 
         //Log.d("Log", "onRmsChanged: " + rmsdB + " Cont: " + cont + " ContPrev: " + contPrev);

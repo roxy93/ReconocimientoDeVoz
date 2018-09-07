@@ -34,7 +34,8 @@ import static com.softlab_roxana.speechtotext.Function.createFile;
 import static com.softlab_roxana.speechtotext.Function.write;
 import static com.softlab_roxana.speechtotext.Function.writeToSDFile;
 
-public class MainActivity extends AppCompatActivity implements RecognitionListener{
+public class MainActivity extends AppCompatActivity implements RecognitionListener
+{
 
     private TextView returnedText;
     ImageButton recordbtn;
@@ -64,13 +65,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private float contPrev;
     private Boolean startPause = true;
     private Boolean same = false;
-    private ArrayList<String> times = new ArrayList<>();
+    //private ArrayList<String> times = new ArrayList<>();//borrar
     private String text = "";
     File file = createFile ();
 
 
 
-    private static final long START_TIME_IN_MILLIS = 3000; //AQUI
+    private static final long START_TIME_IN_MILLIS = 4000; //AQUI
     private CountDownTimer mCountDownTimer;
     private boolean mTimerRunning;
     private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
@@ -281,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
         if (band == 0) {// primera palabra reconocida
 
-            times=null;//limpiar tiempo
+            //times=null;//limpiar tiempo // borrar
             tFin = System.currentTimeMillis() - 1000;//ver si debo cambiar los 1000
             timeTotal = tFin - tIni;
             seg = timeTotal/1000;
@@ -349,8 +350,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
             if (min < 60) {
                 hora = 0;
-
-                writeToSDFile(text + " ",file);
+                writeToSDFile(text + " ",file); //SI SE DESCOMENTA, SE DEBE COMENTAR EL ANTERIOR
                 /*for (int i = 0; i < words2.length; ++i) {
                     writeToSDFile(words2[i] + " ", file);
                 }*/
@@ -359,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 hora = (int) (min / 60);
                 min = min - (hora * 60);
 
-                writeToSDFile(text + " ",file);
+                writeToSDFile(text + " ",file); //SI SE DESCOMENTA, SE DEBE COMENTAR EL ANTERIOR
                 /*for (int i = 0; i < words2.length; ++i) {
                     writeToSDFile(words2[i] + " ", file);
                 }*/
@@ -377,7 +377,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         startTimer();
         if (cont == 0){
             contPrev=rmsdB;
-            /*if (startPause == false) {
+            if (startPause == false) {
 
                 if (rmsdB < -2){
                     lv1.setImageResource(R.drawable.blanco);
@@ -458,7 +458,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     lv6.setImageResource(R.drawable.naranja_rojo);
                     lv7.setImageResource(R.drawable.rojo);
                 }
-            }*/
+            }
         }
 
         cont=rmsdB;
@@ -472,7 +472,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             same = false;*/
             cont = 0;
             //band2=0;
-            /*if (startPause == false) {
+            if (startPause == false) {
                 if (rmsdB < -2) {
                     lv1.setImageResource(R.drawable.blanco);
                     lv2.setImageResource(R.drawable.blanco);
@@ -551,7 +551,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     lv6.setImageResource(R.drawable.naranja_rojo);
                     lv7.setImageResource(R.drawable.rojo);
                 }
-            }*/
+            }
         }
         Log.d("log","band2: " + band2);
         if (band2 >= 80){//revisar esto 70-50 - tiempo sin escuchar una palabra

@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         band = 1;
         }
         //-----------  TIEMPO FINAL -------------------
-        tFin = System.currentTimeMillis() - 1000;
+        tFin = System.currentTimeMillis() - 1000;// ver si cambio solo este dato y no el anterior, quizas 500
         //-----------  TIEMPO FINAL -------------------
 
 
@@ -350,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
             if (min < 60) {
                 hora = 0;
-                writeToSDFile(text + " ",file); //SI SE DESCOMENTA, SE DEBE COMENTAR EL ANTERIOR
+                writeToSDFile(text + " ",file);
                 /*for (int i = 0; i < words2.length; ++i) {
                     writeToSDFile(words2[i] + " ", file);
                 }*/
@@ -359,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 hora = (int) (min / 60);
                 min = min - (hora * 60);
 
-                writeToSDFile(text + " ",file); //SI SE DESCOMENTA, SE DEBE COMENTAR EL ANTERIOR
+                writeToSDFile(text + " ",file);
                 /*for (int i = 0; i < words2.length; ++i) {
                     writeToSDFile(words2[i] + " ", file);
                 }*/

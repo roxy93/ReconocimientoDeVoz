@@ -371,7 +371,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     }
 
     @Override
-    public void onRmsChanged(float rmsdB) {
+    public void onRmsChanged(final float rmsdB) {
         pauseTimer(mCountDownTimer, mTimerRunning);
         resetTimer(mTimeLeftInMillis,START_TIME_IN_MILLIS);
         startTimer();
@@ -379,85 +379,91 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             contPrev=rmsdB;
             if (startPause == false) {
 
-                if (rmsdB < -2){
-                    lv1.setImageResource(R.drawable.blanco);
-                    lv2.setImageResource(R.drawable.blanco);
-                    lv3.setImageResource(R.drawable.blanco);
-                    lv4.setImageResource(R.drawable.blanco);
-                    lv5.setImageResource(R.drawable.blanco);
-                    lv6.setImageResource(R.drawable.blanco);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {//
+                        if (rmsdB < -2) {
 
-                if (rmsdB >= -2 & rmsdB < 0){
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.blanco);
-                    lv3.setImageResource(R.drawable.blanco);
-                    lv4.setImageResource(R.drawable.blanco);
-                    lv5.setImageResource(R.drawable.blanco);
-                    lv6.setImageResource(R.drawable.blanco);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
+                            lv1.setImageResource(R.drawable.blanco);
+                            lv2.setImageResource(R.drawable.blanco);
+                            lv3.setImageResource(R.drawable.blanco);
+                            lv4.setImageResource(R.drawable.blanco);
+                            lv5.setImageResource(R.drawable.blanco);
+                            lv6.setImageResource(R.drawable.blanco);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
 
-                if (rmsdB >= 0 & rmsdB < 2){
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.azul_verde);
-                    lv3.setImageResource(R.drawable.blanco);
-                    lv4.setImageResource(R.drawable.blanco);
-                    lv5.setImageResource(R.drawable.blanco);
-                    lv6.setImageResource(R.drawable.blanco);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
+                        if (rmsdB >= -2 & rmsdB < 0) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.blanco);
+                            lv3.setImageResource(R.drawable.blanco);
+                            lv4.setImageResource(R.drawable.blanco);
+                            lv5.setImageResource(R.drawable.blanco);
+                            lv6.setImageResource(R.drawable.blanco);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
 
-                if (rmsdB >= 2 & rmsdB < 4){
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.azul_verde);
-                    lv3.setImageResource(R.drawable.verde);
-                    lv4.setImageResource(R.drawable.blanco);
-                    lv5.setImageResource(R.drawable.blanco);
-                    lv6.setImageResource(R.drawable.blanco);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
+                        if (rmsdB >= 0 & rmsdB < 2) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.azul_verde);
+                            lv3.setImageResource(R.drawable.blanco);
+                            lv4.setImageResource(R.drawable.blanco);
+                            lv5.setImageResource(R.drawable.blanco);
+                            lv6.setImageResource(R.drawable.blanco);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
 
-                if (rmsdB >= 4 & rmsdB < 6){
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.azul_verde);
-                    lv3.setImageResource(R.drawable.verde);
-                    lv4.setImageResource(R.drawable.amarillo_naranja);
-                    lv5.setImageResource(R.drawable.blanco);
-                    lv6.setImageResource(R.drawable.blanco);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
+                        if (rmsdB >= 2 & rmsdB < 4) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.azul_verde);
+                            lv3.setImageResource(R.drawable.verde);
+                            lv4.setImageResource(R.drawable.blanco);
+                            lv5.setImageResource(R.drawable.blanco);
+                            lv6.setImageResource(R.drawable.blanco);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
 
-                if (rmsdB >= 6 & rmsdB < 8){
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.azul_verde);
-                    lv3.setImageResource(R.drawable.verde);
-                    lv4.setImageResource(R.drawable.amarillo_naranja);
-                    lv5.setImageResource(R.drawable.naranja);
-                    lv6.setImageResource(R.drawable.blanco);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
+                        if (rmsdB >= 4 & rmsdB < 6) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.azul_verde);
+                            lv3.setImageResource(R.drawable.verde);
+                            lv4.setImageResource(R.drawable.amarillo_naranja);
+                            lv5.setImageResource(R.drawable.blanco);
+                            lv6.setImageResource(R.drawable.blanco);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
 
-                if (rmsdB >= 8 & rmsdB < 9){
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.azul_verde);
-                    lv3.setImageResource(R.drawable.verde);
-                    lv4.setImageResource(R.drawable.amarillo_naranja);
-                    lv5.setImageResource(R.drawable.naranja);
-                    lv6.setImageResource(R.drawable.naranja_rojo);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
+                        if (rmsdB >= 6 & rmsdB < 8) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.azul_verde);
+                            lv3.setImageResource(R.drawable.verde);
+                            lv4.setImageResource(R.drawable.amarillo_naranja);
+                            lv5.setImageResource(R.drawable.naranja);
+                            lv6.setImageResource(R.drawable.blanco);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
 
-                if (rmsdB >= 9) {
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.azul_verde);
-                    lv3.setImageResource(R.drawable.verde);
-                    lv4.setImageResource(R.drawable.amarillo_naranja);
-                    lv5.setImageResource(R.drawable.naranja);
-                    lv6.setImageResource(R.drawable.naranja_rojo);
-                    lv7.setImageResource(R.drawable.rojo);
-                }
+                        if (rmsdB >= 8 & rmsdB < 9) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.azul_verde);
+                            lv3.setImageResource(R.drawable.verde);
+                            lv4.setImageResource(R.drawable.amarillo_naranja);
+                            lv5.setImageResource(R.drawable.naranja);
+                            lv6.setImageResource(R.drawable.naranja_rojo);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
+
+                        if (rmsdB >= 9) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.azul_verde);
+                            lv3.setImageResource(R.drawable.verde);
+                            lv4.setImageResource(R.drawable.amarillo_naranja);
+                            lv5.setImageResource(R.drawable.naranja);
+                            lv6.setImageResource(R.drawable.naranja_rojo);
+                            lv7.setImageResource(R.drawable.rojo);
+                        }
+                    }
+                });
             }
         }
 
@@ -473,84 +479,90 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             cont = 0;
             //band2=0;
             if (startPause == false) {
-                if (rmsdB < -2) {
-                    lv1.setImageResource(R.drawable.blanco);
-                    lv2.setImageResource(R.drawable.blanco);
-                    lv3.setImageResource(R.drawable.blanco);
-                    lv4.setImageResource(R.drawable.blanco);
-                    lv5.setImageResource(R.drawable.blanco);
-                    lv6.setImageResource(R.drawable.blanco);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
-                if (rmsdB >= -2 & rmsdB < 0) {
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.blanco);
-                    lv3.setImageResource(R.drawable.blanco);
-                    lv4.setImageResource(R.drawable.blanco);
-                    lv5.setImageResource(R.drawable.blanco);
-                    lv6.setImageResource(R.drawable.blanco);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {//
 
-                if (rmsdB >= 0 & rmsdB < 2) {
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.azul_verde);
-                    lv3.setImageResource(R.drawable.blanco);
-                    lv4.setImageResource(R.drawable.blanco);
-                    lv5.setImageResource(R.drawable.blanco);
-                    lv6.setImageResource(R.drawable.blanco);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
+                        if (rmsdB < -2) {
+                            lv1.setImageResource(R.drawable.blanco);
+                            lv2.setImageResource(R.drawable.blanco);
+                            lv3.setImageResource(R.drawable.blanco);
+                            lv4.setImageResource(R.drawable.blanco);
+                            lv5.setImageResource(R.drawable.blanco);
+                            lv6.setImageResource(R.drawable.blanco);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
+                        if (rmsdB >= -2 & rmsdB < 0) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.blanco);
+                            lv3.setImageResource(R.drawable.blanco);
+                            lv4.setImageResource(R.drawable.blanco);
+                            lv5.setImageResource(R.drawable.blanco);
+                            lv6.setImageResource(R.drawable.blanco);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
 
-                if (rmsdB >= 2 & rmsdB < 4) {
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.azul_verde);
-                    lv3.setImageResource(R.drawable.verde);
-                    lv4.setImageResource(R.drawable.blanco);
-                    lv5.setImageResource(R.drawable.blanco);
-                    lv6.setImageResource(R.drawable.blanco);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
+                        if (rmsdB >= 0 & rmsdB < 2) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.azul_verde);
+                            lv3.setImageResource(R.drawable.blanco);
+                            lv4.setImageResource(R.drawable.blanco);
+                            lv5.setImageResource(R.drawable.blanco);
+                            lv6.setImageResource(R.drawable.blanco);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
 
-                if (rmsdB >= 4 & rmsdB < 6) {
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.azul_verde);
-                    lv3.setImageResource(R.drawable.verde);
-                    lv4.setImageResource(R.drawable.amarillo_naranja);
-                    lv5.setImageResource(R.drawable.blanco);
-                    lv6.setImageResource(R.drawable.blanco);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
+                        if (rmsdB >= 2 & rmsdB < 4) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.azul_verde);
+                            lv3.setImageResource(R.drawable.verde);
+                            lv4.setImageResource(R.drawable.blanco);
+                            lv5.setImageResource(R.drawable.blanco);
+                            lv6.setImageResource(R.drawable.blanco);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
 
-                if (rmsdB >= 6 & rmsdB < 8) {
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.azul_verde);
-                    lv3.setImageResource(R.drawable.verde);
-                    lv4.setImageResource(R.drawable.amarillo_naranja);
-                    lv5.setImageResource(R.drawable.naranja);
-                    lv6.setImageResource(R.drawable.blanco);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
+                        if (rmsdB >= 4 & rmsdB < 6) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.azul_verde);
+                            lv3.setImageResource(R.drawable.verde);
+                            lv4.setImageResource(R.drawable.amarillo_naranja);
+                            lv5.setImageResource(R.drawable.blanco);
+                            lv6.setImageResource(R.drawable.blanco);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
 
-                if (rmsdB >= 8 & rmsdB < 9) {
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.azul_verde);
-                    lv3.setImageResource(R.drawable.verde);
-                    lv4.setImageResource(R.drawable.amarillo_naranja);
-                    lv5.setImageResource(R.drawable.naranja);
-                    lv6.setImageResource(R.drawable.naranja_rojo);
-                    lv7.setImageResource(R.drawable.blanco);
-                }
+                        if (rmsdB >= 6 & rmsdB < 8) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.azul_verde);
+                            lv3.setImageResource(R.drawable.verde);
+                            lv4.setImageResource(R.drawable.amarillo_naranja);
+                            lv5.setImageResource(R.drawable.naranja);
+                            lv6.setImageResource(R.drawable.blanco);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
 
-                if (rmsdB >= 9) {
-                    lv1.setImageResource(R.drawable.azul);
-                    lv2.setImageResource(R.drawable.azul_verde);
-                    lv3.setImageResource(R.drawable.verde);
-                    lv4.setImageResource(R.drawable.amarillo_naranja);
-                    lv5.setImageResource(R.drawable.naranja);
-                    lv6.setImageResource(R.drawable.naranja_rojo);
-                    lv7.setImageResource(R.drawable.rojo);
-                }
+                        if (rmsdB >= 8 & rmsdB < 9) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.azul_verde);
+                            lv3.setImageResource(R.drawable.verde);
+                            lv4.setImageResource(R.drawable.amarillo_naranja);
+                            lv5.setImageResource(R.drawable.naranja);
+                            lv6.setImageResource(R.drawable.naranja_rojo);
+                            lv7.setImageResource(R.drawable.blanco);
+                        }
+
+                        if (rmsdB >= 9) {
+                            lv1.setImageResource(R.drawable.azul);
+                            lv2.setImageResource(R.drawable.azul_verde);
+                            lv3.setImageResource(R.drawable.verde);
+                            lv4.setImageResource(R.drawable.amarillo_naranja);
+                            lv5.setImageResource(R.drawable.naranja);
+                            lv6.setImageResource(R.drawable.naranja_rojo);
+                            lv7.setImageResource(R.drawable.rojo);
+                        }
+                    }
+                });
             }
         }
         Log.d("log","band2: " + band2);

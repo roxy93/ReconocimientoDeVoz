@@ -1,5 +1,6 @@
 package com.softlab_roxana.speechtotext;
 
+import android.media.AudioManager;
 import android.os.CountDownTimer;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -82,8 +83,16 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         super.onCreate(savedInstanceState);
         //getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
+
+        //adrian dice que coloca el volumen en 0--------------
+        AudioManager audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        if(audioManager == null) return;
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+        //-----------------------------------------------------
+
         returnedText = findViewById(R.id.txtSpeechInput);
         returnedText.setMovementMethod(new ScrollingMovementMethod());
+
 
         //progressBar = (ProgressBar) findViewById(R.id.progressBar1);
         recordbtn = findViewById(R.id.SpeakButton);
